@@ -1,0 +1,10 @@
+/dist
+/doc
+/html
+/test/utf-8/batch/*
+/tmp
+/Gemfile.lock
+*~
+*.bkp
+*.swp
+.DS_Store

@@ -1,0 +1,54 @@
+= Hacking Sanzang
+
+== Testing and building
+
+* Use "rake test" to run all tests.
+* Use "rake build" to create a gem package in the "dist" directory.
+
+== Platforms
+
+These programs should work on all platforms with Ruby 1.9 or later. Regular
+testing takes place on GNU/Linux operating systems.
+
+== Languages
+
+The translation program may not be very useful for all languages. It was
+designed specifically for dealing with the more difficult aspects of
+translating from ancient Chinese. For a language like Sanskrit or Tibetan, it
+may not be so useful. However, the limitations of this program have not yet
+been investigated.
+
+== Tables
+
+A valid translation table is necessary when using the translator. More
+information on this format is available in the README file. The following
+tokens are reserved: "~|", "|", and "|~", and these should not be used in table
+record data. No "escape sequences" are available for the inclusion of such
+tokens as data.
+
+== Multiprocessing
+
+Most every Unix-like system supports the fork(2) system call and therefore has
+the potential to run Sanzang in a multiprocessing mode for batches. However,
+each Ruby implementation and port may be different, and Sanzang will check to
+see if the fork method has been implemented before attempting to use the
+"parallel" gem for multiprocessing.
+
+Batch mode will print a warning message if it cannot use the "parallel" gem.
+It will then process the batch, but will not utilize multiprocessing, so it
+will run slower. The "mingw" and "mswin" ports of Ruby do not have support for
+fork method, yet the "parallel" library attempts to fork anyhow. To avoid
+potential errors, the translator will not even attempt to use multiprocessing
+on platforms in which the fork method is not implemented.
+
+Note that for Windows, the "cygwin" port of Ruby does implement does support
+fork(2) perfectly, so Ruby 1.9+ on Cygwin can utilize the fork method and so
+it supports standard multiprocessing. Therefore, Cygwin is the most robust
+environment for running Sanzang on a Windows PC.
+
+== Encodings
+
+Converters for several encodings have not yet been implemented by MRI Ruby.
+Most of these are obscure and not widely used anyways. Perhaps the most
+notable is EUC-TW, which is an old Unix encoding for traditional Chinese.
+However, even this most "notable" missing encoding is obscure and unimportant.
