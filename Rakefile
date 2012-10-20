@@ -1,28 +1,67 @@
-require "rdoc/task"
+#
+# Note: Building tar/gz and tar/bz2 files has been tested only with GNU tar.
+#
 
-task :default => [:test, :build]
+require "rdoc/task"
+require "./lib/sanzang/version"
+
+task :all => [:test, :clean, :gem, :tar]
+task :build => [:test, :gem]
+task :clean => [:clean_dist, :clean_tests]
+task :default => [:test, :gem]
+task :dist => [:test, :gem]
+task :tar => [:tar_gz, :tar_bz2]
 
 desc "Build RubyGem"
-task :build do
-  FileUtils.cd(File.dirname(__FILE__))
+task :gem => :clean_tests do
+  FileUtils.mkdir_p("dist")
   Rake.sh "gem build sanzang.gemspec"
-  puts ""
   Dir.glob("sanzang*.gem").each do |gem|
-    FileUtils.mv(gem, "dist")
-    puts("=> #{File.join("dist", gem)}")
+    FileUtils.mv(gem, File.join("dist", gem))
+    puts "\n=> #{File.join("dist", gem)}\n\n"
   end
 end
 
+desc "Build tar/gz"
+task :tar_gz => :clean_tests do
+  FileUtils.mkdir_p("dist")
+  old_wd = Dir.pwd
+  tar_fpath = File.join(Dir.pwd, "dist", "sanzang-#{Sanzang::VERSION}.tar.gz")
+  Dir.chdir("..")
+  Rake.sh "tar --exclude='.git*' --exclude=dist -czvf #{tar_fpath} sanzang"
+  Dir.chdir(old_wd)
+  puts "\n=> #{tar_fpath}\n\n"
+end
+
+desc "Build tar/bz2"
+task :tar_bz2 => :clean_tests do
+  FileUtils.mkdir_p("dist")
+  old_wd = Dir.pwd
+  tar_fpath = File.join(Dir.pwd, "dist", "sanzang-#{Sanzang::VERSION}.tar.bz2")
+  Dir.chdir("..")
+  Rake.sh "tar --exclude='.git*' --exclude=dist -cjvf #{tar_fpath} sanzang"
+  Dir.chdir(old_wd)
+  puts "\n=> #{tar_fpath}\n\n"
+end
+
 desc "Clean old build files"
-task :clean do
-  Dir.glob(File.join(File.dirname(__FILE__), "dist", "*.gem")) do |gem|
-    File.delete(gem)
+task :clean_dist do
+  Dir.glob(File.join("dist", "*")) do |dist_file|
+    puts "rm: #{dist_file}"
+    File.delete dist_file
+  end
+end
+
+desc "Clean old test data"
+task :clean_tests do
+  Dir.glob(File.join("test", "utf-8", "batch", "*.txt")) do |test_file|
+    puts "rm: #{test_file}"
+    File.delete test_file
   end
 end
 
 desc "Run unit tests"
 task :test do
-  FileUtils.cd(File.dirname(__FILE__))
   Rake.sh "testrb test/tc_*.rb"
 end
 
