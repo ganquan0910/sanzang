@@ -1,7 +1,7 @@
 /dist
 /doc
 /html
-/test/utf-8/batch/*
+/test/utf-8/batch/*.txt
 /tmp
 /Gemfile.lock
 *~
