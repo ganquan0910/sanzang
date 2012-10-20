@@ -4,7 +4,7 @@ require "./lib/sanzang/version"
 
 Gem::Specification.new do |s|
   s.required_ruby_version = ">= 1.9.0"
-  s.add_dependency("parallel", ">= 0.5.18")
+  s.add_dependency("parallel", ">= 0.5.19")
 
   s.name          = "sanzang"
   s.summary       = "Sanzang"
