@@ -123,7 +123,7 @@ module Sanzang::Command
 
         pr.banner << "\nExamples:\n"
         pr.banner << "    #{@name} -i text.txt -o text.sz.txt table.txt\n"
-        pr.banner << "    #{@name} -B table.txt output_dir < myfiles.txt\n"
+        pr.banner << "    #{@name} -B output_dir table.txt < myfiles.txt\n"
         pr.banner << "\nOptions:\n"
 
         pr.on("-h", "--help", "show this help message and exit") do |v|
