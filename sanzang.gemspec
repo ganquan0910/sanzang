@@ -16,9 +16,9 @@ Gem::Specification.new do |s|
   s.description  << "particularly suitable as a translation aid for for "
   s.description  << "ancient Chinese texts. Sanzang uses simple direct "
   s.description  << "translation rules organized into translation tables, "
-  s.description  << "which are stored in a straightforward text format. Batch "
-  s.description  << "translations utilize multiprocessing to translate files "
-  s.description  << "in parallel, naturally scaling to the number of "
+  s.description  << "which are stored in a straightforward text format. "
+  s.description  << "Batch translations utilize multiprocessing to translate "
+  s.description  << "files in parallel, naturally scaling to the number of "
   s.description  << "processors available. Sanzang is available under the "
   s.description  << "GNU General Public License, version 3."
 

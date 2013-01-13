@@ -149,9 +149,9 @@ module Sanzang::Command
         pr.on("-P", "--platform", "show platform information") do |v|
           puts "Ruby version: #{RUBY_VERSION}"
           puts "Ruby platform: #{RUBY_PLATFORM}"
-          puts "External encoding: #{Encoding::default_external}"
-          if Encoding::default_internal != nil
-            puts "Internal encoding: #{Encoding::default_internal}"
+          puts "External encoding: #{Encoding.default_external}"
+          if Encoding.default_internal != nil
+            puts "Internal encoding: #{Encoding.default_internal}"
           end
           exit 0
         end
