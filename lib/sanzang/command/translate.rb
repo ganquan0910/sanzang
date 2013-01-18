@@ -137,7 +137,10 @@ module Sanzang::Command
           @encoding = Encoding.find(v)
         end
         pr.on("-L", "--list-encodings", "list possible encodings") do |v|
-          puts(Encoding.list.collect {|e| e.to_s }.sort)
+          encodings = Encoding.list.sort do |x,y|
+            x.to_s.upcase <=> y.to_s.upcase
+          end
+          puts encodings
           exit 0
         end
         pr.on("-i", "--infile=FILE", "read input text from FILE") do |v|
