@@ -77,7 +77,7 @@ module Sanzang::Command
       return err.status
     rescue Exception => err
       $stderr.puts err.backtrace
-      $stderr.puts "ERROR: #{err.inspect}"
+      $stderr.puts "\nERROR: #{err.inspect}\n\n"
       return 1
     end
 
