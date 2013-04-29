@@ -23,26 +23,26 @@ require_relative File.join("..", "version")
 
 module Sanzang::Command
 
-  # The Sanzang::Command::Reflow class provides a Unix-style command for
-  # text reformatting. This reformatting is typically for use prior to
-  # processing the text with the Sanzang::Command::Translate. The reason for
-  # this is to do initial text transformations to ensure (1) that terms will
-  # be translated reliably, and (2) that the final output of the translation
-  # will be readable by the user (i.e. lines not too long).
+  # This class provides a command for text reformatting for CJK languages. This
+  # reformatting is typically for use prior to processing the text with the
+  # translation commands. The reason for doing this is so that initial text
+  # transformations will be done to ensure (1) that terms will be translated
+  # reliably, and (2) that the final output of the translation will be readable
+  # by the user (i.e. lines not too long).
   #
   class Reflow
 
-    # Create a new instance of the Reflow class.
+    # Create a new instance of the reflow command
     #
     def initialize
-      @name = "sanzang-reflow"
+      @name = "sanzang reflow"
       @encoding = Encoding.default_external
       @infile = nil
       @outfile = nil
     end
 
-    # Run the Reflow command with the given arguments. The parameter _args_
-    # would typically be an Array of Unix-style command parameters. Calling
+    # Run the reflow command with the given arguments. The parameter _args_
+    # would typically be an array of command options and parameters. Calling
     # this with the "-h" or "--help" option will print full usage information
     # necessary for running this command.
     #
@@ -51,7 +51,7 @@ module Sanzang::Command
       parser.parse!(args)
 
       if args.length != 0
-        puts(parser)
+        $stderr.puts(parser)
         return 1
       end
 
@@ -62,7 +62,7 @@ module Sanzang::Command
         fin.binmode.set_encoding(@encoding)
         fout = @outfile ? File.open(@outfile, "w") : $stdout
         fout.binmode.set_encoding(@encoding)
-        fout.write(Sanzang::TextFormatter.new.reflow_cjk_text(fin.read))
+        fout.write(Sanzang::TextFormatter.new.reflow_cjk(fin.read))
       ensure
         if defined?(fin) and fin != $stdin
           fin.close if not fin.closed?
@@ -83,6 +83,8 @@ module Sanzang::Command
 
     private
 
+    # Initialize the encoding for text data if it is not already set
+    #
     def set_data_encoding
       if @encoding == nil
         if Encoding.default_external == Encoding::IBM437
@@ -94,44 +96,42 @@ module Sanzang::Command
       end
     end
 
+    # An OptionParser for the command
+    #
     def option_parser
-      OptionParser.new do |pr|
-        pr.banner = "Usage: #{@name} [options]\n"
+      OptionParser.new do |op|
+        op.banner = "Usage: #{@name} [options]\n"
 
-        pr.banner << "\nReformat text file contents into lines based on "
-        pr.banner << "spacing, punctuation, etc.\n"
-        pr.banner << "\nExamples:\n"
-        pr.banner << "    #{@name} -i in/mytext.txt -o out/mytext.txt\n"
-        pr.banner << "\nOptions:\n"
+        op.banner << "\nReformat text file contents into lines based on "
+        op.banner << "spacing, punctuation, etc.\n"
+        op.banner << "\nExamples:\n"
+        op.banner << "    #{@name} -i in/mytext.txt -o out/mytext.txt\n"
+        op.banner << "\nOptions:\n"
 
-        pr.on("-h", "--help", "show this help message and exit") do |v|
-          puts pr
+        op.on("-h", "--help", "show this help message and exit") do |v|
+          puts op
           exit 0
         end
-        pr.on("-E", "--encoding=ENC", "set data encoding to ENC") do |v|
+        op.on("-E", "--encoding=ENC", "set data encoding to ENC") do |v|
           @encoding = Encoding.find(v)
         end
-        pr.on("-L", "--list-encodings", "list possible encodings") do |v|
+        op.on("-L", "--list-encodings", "list possible encodings") do |v|
           encodings = Encoding.list.sort do |x,y|
             x.to_s.upcase <=> y.to_s.upcase
           end
           puts encodings
           exit 0
         end
-        pr.on("-i", "--infile=FILE", "read input text from FILE") do |v|
+        op.on("-i", "--infile=FILE", "read input text from FILE") do |v|
           @infile = v
         end
-        pr.on("-o", "--outfile=FILE", "write output text to FILE") do |v|
+        op.on("-o", "--outfile=FILE", "write output text to FILE") do |v|
           @outfile = v
-        end
-        pr.on("-V", "--version", "show version number and exit") do |v|
-          puts "Sanzang version: #{Sanzang::VERSION}"
-          exit 0
         end
       end
     end
 
-    # The standard name for the command.
+    # The name of the command
     #
     attr_reader :name
 

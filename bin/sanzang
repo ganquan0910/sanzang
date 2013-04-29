@@ -18,4 +18,4 @@
 
 require_relative File.join("..", "lib", "sanzang")
 
-Kernel.exit(Sanzang::Command::Reflow.new.run(ARGV))
+Kernel.exit(Sanzang::Command::SanzangCmd.new.run(ARGV))

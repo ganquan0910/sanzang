@@ -36,7 +36,7 @@ module Sanzang
     # kept separate. Following this, all newlines are removed, and the text is
     # then reformatted according to the remaining punctuation and spacing.
     #
-    def reflow_cjk_text(s)
+    def reflow_cjk(s)
       source_encoding = s.encoding
       s.encode!(Encoding::UTF_8)
 

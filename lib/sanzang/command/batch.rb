@@ -19,36 +19,38 @@
 require "optparse"
 
 require_relative File.join("..", "translation_table")
-require_relative File.join("..", "translator")
+require_relative File.join("..", "batch_translator")
 require_relative File.join("..", "version")
 
 module Sanzang::Command
 
-  # This class provides a command for simple translation of one file or text.
-  # Input and output text can be read from either stdin and stdout, or from
-  # files. For mass translation of texts, see Sanzang::Command::Batch.
+  # This class implements a command for batch translation of texts. The command
+  # presumes that the list of input files will be read from $stdin, while the
+  # output files will be written to a single directory. Usage information can
+  # be accessed by passing in the "-h" or "--help" options.
   #
-  class Translate
+  class Batch
 
-    # Create a new instance of the Translate class.
+    # Create a new instance of the batch command.
     #
     def initialize
-      @name = "sanzang translate"
+      @name = "sanzang batch"
       @encoding = nil
-      @infile = nil
-      @outfile = nil
+      @outdir = nil
+      @jobs = nil
     end
 
-    # Run the translate command with the given arguments. The parameter _args_
+    # Run the batch command with the given arguments. The parameter _args_
     # would typically be an array of command options and parameters. Calling
-    # this with the "-h" or "--help" option will print full usage information
-    # necessary for running this command.
+    # this method with the "-h" or "--help" option will print full usage
+    # information necessary for running the command. This method will return
+    # either 0 (success) or 1 (failure).
     #
     def run(args)
       parser = option_parser
       parser.parse!(args)
 
-      if args.length != 1
+      if args.length != 2
         $stderr.puts parser
         return 1
       end
@@ -58,24 +60,11 @@ module Sanzang::Command
       translator = nil
       File.open(args[0], "rb", encoding: @encoding) do |table_file|
         table = Sanzang::TranslationTable.new(table_file.read)
-        translator = Sanzang::Translator.new(table)
+        translator = Sanzang::BatchTranslator.new(table)
       end
 
-      begin
-        fin = @infile ? File.open(@infile, "rb") : $stdin
-        fin.binmode.set_encoding(@encoding)
-        fout = @outfile ? File.open(@outfile, "wb") : $stdout
-        fout.binmode.set_encoding(@encoding)
-        translator.translate_io(fin, fout)
-      ensure
-        if defined?(fin) and fin != $stdin
-          fin.close if not fin.closed?
-        end
-        if defined?(fout) and fin != $stdout
-          fout.close if not fout.closed?
-        end
-      end
-
+      $stdin.binmode.set_encoding(@encoding)
+      puts translator.translate_to_dir($stdin.read.split, args[1], true, @jobs)
       return 0
     rescue SystemExit => err
       return err.status
@@ -87,7 +76,7 @@ module Sanzang::Command
 
     private
 
-    # Initialize the encoding for text data if it is not already set
+    # Set the encoding for text data if it is not already set
     #
     def set_data_encoding
       if @encoding == nil
@@ -100,18 +89,18 @@ module Sanzang::Command
       end
     end
 
-    # An OptionParser for the command
+    # Return an OptionParser object for this command
     #
     def option_parser
       OptionParser.new do |op|
-        op.banner = "Usage: #{@name} [options] table\n"
+        op.banner = "Usage: #{@name} [options] table output_dir < queue\n"
 
-        op.banner << "\nTranslate text using simple table rules. Input text "
-        op.banner << "is read from STDIN by\ndefault, and the output is "
-        op.banner << "written to STDOUT by default.\n"
+        op.banner << "\nBatch translate files concurrently. A list of files "
+        op.banner << "is read from STDIN, while\nprogress information is "
+        op.banner << "printed to STDERR. The list of output files written is\n"
+        op.banner << "printed to STDOUT at the end of the batch. The "
+        op.banner << "output directory is specified as\na parameter.\n"
 
-        op.banner << "\nExample:\n"
-        op.banner << "    #{@name} -i text.txt -o text.sz.txt table.txt\n"
         op.banner << "\nOptions:\n"
 
         op.on("-h", "--help", "show this help message and exit") do |v|
@@ -128,11 +117,8 @@ module Sanzang::Command
           puts encodings
           exit 0
         end
-        op.on("-i", "--infile=FILE", "read input text from FILE") do |v|
-          @infile = v
-        end
-        op.on("-o", "--outfile=FILE", "write output text to FILE") do |v|
-          @outfile = v
+        op.on("-j", "--jobs=N", "allow N concurrent processes") do |v|
+          @jobs = v.to_i
         end
       end
     end

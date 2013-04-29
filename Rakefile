@@ -7,7 +7,7 @@ require "./lib/sanzang/version"
 
 task :all => [:test, :clean, :gem, :tar]
 task :build => [:test, :gem]
-task :clean => [:clean_dist, :clean_tests]
+task :clean => [:clean_dist, :clean_tests, :clean_rdoc]
 task :default => [:test, :gem]
 task :dist => [:test, :gem]
 task :tar => [:tar_gz, :tar_bz2]
@@ -23,25 +23,33 @@ task :gem => :clean_tests do
 end
 
 desc "Build tar/gz"
-task :tar_gz => :clean_tests do
+task :tar_gz => [:clean_tests, :clean_rdoc] do
   FileUtils.mkdir_p("dist")
   old_wd = Dir.pwd
-  tar_fpath = File.join(Dir.pwd, "dist", "sanzang-#{Sanzang::VERSION}.tar.gz")
-  Dir.chdir("..")
-  Rake.sh "tar --exclude='.git*' --exclude=dist -czvf #{tar_fpath} sanzang"
+  tar_fpath = File.join(Dir.pwd, "dist", "sanzang-#{Sanzang::VERSION}.tar")
+  Dir.chdir ".."
+  Rake.sh "rm -rvf html"
+  Rake.sh "rm -vf #{tar_fpath}.gz"
+  tar_opts = "--exclude='.git*' --exclude=dist --exclude=html"
+  Rake.sh "tar #{tar_opts} -cvf #{tar_fpath} sanzang"
+  Rake.sh "gzip -9 #{tar_fpath}"
   Dir.chdir(old_wd)
-  puts "\n=> #{tar_fpath}\n\n"
+  puts "\n=> #{tar_fpath}.gz\n\n"
 end
 
 desc "Build tar/bz2"
-task :tar_bz2 => :clean_tests do
+task :tar_bz2 => [:clean_tests, :clean_rdoc] do
   FileUtils.mkdir_p("dist")
   old_wd = Dir.pwd
-  tar_fpath = File.join(Dir.pwd, "dist", "sanzang-#{Sanzang::VERSION}.tar.bz2")
-  Dir.chdir("..")
-  Rake.sh "tar --exclude='.git*' --exclude=dist -cjvf #{tar_fpath} sanzang"
+  tar_fpath = File.join(Dir.pwd, "dist", "sanzang-#{Sanzang::VERSION}.tar")
+  Dir.chdir ".."
+  Rake.sh "rm -rvf html"
+  Rake.sh "rm -f #{tar_fpath}.bz2"
+  tar_opts = "--exclude='.git*' --exclude=dist --exclude=html"
+  Rake.sh "tar #{tar_opts} -cvf #{tar_fpath} sanzang"
+  Rake.sh "bzip2 -9 #{tar_fpath}"
   Dir.chdir(old_wd)
-  puts "\n=> #{tar_fpath}\n\n"
+  puts "\n=> #{tar_fpath}.bz2\n\n"
 end
 
 desc "Clean old build files"
@@ -50,6 +58,11 @@ task :clean_dist do
     puts "rm: #{dist_file}"
     File.delete dist_file
   end
+end
+
+desc "Clean RDoc documentation"
+task :clean_rdoc do
+  Rake.sh "rm -rvf html"
 end
 
 desc "Clean old test data"
@@ -71,5 +84,6 @@ RDoc::Task.new do |rd|
   rd.rdoc_files.include "lib/**/*"
   rd.rdoc_files.include "HACKING"
   rd.rdoc_files.include "LICENSE"
+  rd.rdoc_files.include "MANUAL"
   rd.rdoc_files.include "README"
 end

@@ -15,41 +15,30 @@
 #
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>.
-#
+
 module Sanzang
 
-  # TranslationTable encapsulates the set of rules used for translation by
-  # Sanzang::Translator. These rules may be loaded from a string passed in to
-  # the constructor, or loaded from an open IO object. The translation rules
-  # will then go through basic parsing to ensure the table data is in the
-  # correct format, and then the rules are reverse sorted by the length of the
-  # source language column. Thereafter, these rules are accessible through the
-  # ''records'' attribute, and metadata is available through other accessors
-  # and methods. It is the responsibility of Sanzang::Translator object to
-  # actually apply the rules of a TranslationTable to some text, as the table
-  # merely encapsulates a set of translation rules.
-  #
-  # The format for translation table data can be summarized as the following:
-  #
-  # * Plain text with one line per record
-  # * Records begin with "~|", end with "|~", and are delimited by "|".
-  # * The number of columns in each record must be consistent.
-  #
-  # An example of this format is the following:
-  #
-  #   ~|zh-term1|en-term1|~
-  #   ~|zh-term2|en-term2|~
-  #   ~|zh-term3|en-term3|~
+  # A translation table encapsulates a set of rules for translating with
+  # the \Sanzang system. These are essentially read-only objects meant for
+  # storing well-defined translation table data.
   #
   class TranslationTable
 
-    # Create a new TranslationTable object from a string or by reading an IO
-    # object. If the table parameter is a kind of string, then attempt to parse
-    # the table data from this string. Otherwise treat the parameter as an open
-    # IO object, and attempt to read the string data from that. After loading
-    # and verifying the contents of the translation table, all the records are
-    # reverse sorted by length, since this is the order in which they will be
-    # applied.
+    # A table is created from a formatted string of translation rules. The
+    # string is in the format of delimited text. The text format can be
+    # summarized as follows:
+    #
+    # - Each line of text is a record for a translation rule.
+    # - Each record begins with "~|" and ends with "|~".
+    # - Fields in the record are separated by the "|" character.
+    # - The first field contains the term in the source language.
+    # - Subsequent fields are equivalent terms in destination languages.
+    # - The number of columns must be consistent for the entire table.
+    #
+    # The first element in a record is a term in the source language, and
+    # subsequent elements are are equivalent terms in destination languages.
+    # The number of "columns" in a translation table must be consistent across
+    # the entire table.
     #
     def initialize(rules)
       contents = rules.kind_of?(String) ? rules : rules.read
@@ -60,52 +49,48 @@ module Sanzang
       separator = "|".encode(@encoding)
 
       @records = contents.gsub("\r", "").split("\n").collect do |rec|
-        rec = rec.strip.gsub(left, "").gsub(right, "").split(separator)
+        rec.strip.gsub(left, "").gsub(right, "").split(separator)
       end
 
-      if @records.length > 0
-        @width = records[0].length
-        0.upto(@records.length - 1) do |i|
-          if @records[i].length != @width
-            raise "Column mismatch: Line #{i + 1}"
-          end
+      @width = records[0].length
+      0.upto(@records.length - 1) do |i|
+        if @records[i].length != @width
+          raise "Column mismatch: Line #{i + 1}"
         end
-      else
-        @width = 0
       end
 
-      @records.sort! {|x,y| y.length <=> x.length }
+      @records.sort! {|x,y| y[0].length <=> x[0].length }
     end
 
-    # Retrieve a record by its numeric index. This is just shorthand for
-    # looking at the records attribute directly.
+    # Retrieve a record by its numeric index.
     #
     def [](index)
       @records[index]
     end
 
-    # Find the record where the source language field is equal to the given
-    # parameter.
+    # Find a record by the source language term (first column).
     #
     def find(term)
       @records.find {|rec| rec[0] == term }
     end
 
-    # The number of records in the translation table (the table length).
+    # The number of records in the table
     #
     def length
       @records.length
     end
 
-    # The number of columns in the translation table (the table width).
+    # The number of columns in the table
     #
-    attr_reader :width
+    def width
+      @records[0].length
+    end
 
-    # The records for the translation table, as an Array.
+    # The records for the translation table, as an array
     #
     attr_reader :records
 
-    # The text encoding used for all translation table data.
+    # The text encoding used for all translation table data
     #
     attr_reader :encoding
 

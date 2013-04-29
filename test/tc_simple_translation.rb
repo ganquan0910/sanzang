@@ -5,10 +5,6 @@ require "test/unit"
 
 require_relative File.join("..", "lib", "sanzang")
 
-# assert_nothing_raised
-# assert_equal(x, y)
-# assert(stmt, "Error message")
-#
 class TestSanzang < Test::Unit::TestCase
 
   def table_string
@@ -45,7 +41,7 @@ class TestSanzang < Test::Unit::TestCase
   def test_translation_table
     table_path = File.join(File.dirname(__FILE__), "utf-8", "table.txt")
     fin = File.open(table_path, "rb", encoding: "UTF-8")
-    table = Sanzang::TranslationTable.new(fin)
+    table = Sanzang::TranslationTable.new(fin.read)
     fin.close
     assert(table.width.class == Fixnum, "Table width undefined")
     assert(table.length.class == Fixnum, "Table length undefined")
@@ -60,7 +56,7 @@ class TestSanzang < Test::Unit::TestCase
   end
 
   def test_reflow_cjk_string
-    text = Sanzang::TextFormatter.new.reflow_cjk_text(stage_1())
+    text = Sanzang::TextFormatter.new.reflow_cjk(stage_1())
     assert_equal(stage_2(), text)
   end
 
@@ -74,22 +70,22 @@ class TestSanzang < Test::Unit::TestCase
     table_path = File.join(File.dirname(__FILE__), "utf-8", "table.txt")
     s2_path = File.join(File.dirname(__FILE__), "utf-8", "stage_2.txt")
     s3_path = File.join(File.dirname(__FILE__), "utf-8", "stage_3.txt")
-    table = Sanzang::TranslationTable.new(table_path)
+    table = Sanzang::TranslationTable.new(IO.read(table_path))
     translator = Sanzang::Translator.new(table)
     translator.translate_io(s2_path, s3_path)
   end
 
   def test_translator_parallel
     table = Sanzang::TranslationTable.new(table_string())
-    translator = Sanzang::Translator.new(table)
-    translator.runs_parallel?
-    assert(translator.processor_count > 0, "Processor count less than zero")
+    bt = Sanzang::BatchTranslator.new(table)
+    bt.forking?
+    assert(bt.processor_count > 0, "Processor count less than zero")
   end
 
   def test_translate_batch
     table = Sanzang::TranslationTable.new(table_string())
-    translator = Sanzang::Translator.new(table)
-    translator.translate_batch(
+    bt = Sanzang::BatchTranslator.new(table)
+    bt.translate_to_dir(
         Dir.glob(File.join(File.dirname(__FILE__), "utf-8", "file_*.txt")),
         File.join(File.dirname(__FILE__), "utf-8", "batch"), false)
   end

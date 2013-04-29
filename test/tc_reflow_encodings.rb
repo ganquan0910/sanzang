@@ -25,7 +25,7 @@ class TestReflowEncodings < Test::Unit::TestCase
     text_s1.encode!(encoding)
     text_s2.encode!(encoding)
     formatter = Sanzang::TextFormatter.new
-    assert_equal(text_s2, formatter.reflow_cjk_text(text_s1))
+    assert_equal(text_s2, formatter.reflow_cjk(text_s1))
   end
 
   # Han characters, simplified and without double vertical bar. The margin
@@ -38,7 +38,7 @@ class TestReflowEncodings < Test::Unit::TestCase
     text_s1.encode!(encoding)
     text_s2.encode!(encoding)
     formatter = Sanzang::TextFormatter.new
-    assert_equal(text_s2, formatter.reflow_cjk_text(text_s1))
+    assert_equal(text_s2, formatter.reflow_cjk(text_s1))
   end
 
   # UTF-8 (Traditional Chinese)

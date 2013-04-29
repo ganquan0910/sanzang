@@ -1,4 +1,8 @@
 [1.1] 　　　　大唐三藏法師玄奘奉
+[1.2] 　　　　 dà táng sānzàng fǎshī xuánzàng fèng
+[1.3] 　　　　 great tang tripiṭaka dharma-master xuanzang reverently
 
 [2.1] 　詔譯
+[2.2] 　 zhào yì
+[2.3] 　 imperial-order translate/interpret
 
