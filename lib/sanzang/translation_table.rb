@@ -52,6 +52,12 @@ module Sanzang
         rec.strip.gsub(left, "").gsub(right, "").split(separator)
       end
 
+      if @records.length < 1
+        raise "Table must have at least 1 row"
+      elsif @records[0].length < 2
+        raise "Table must have at least 2 columns"
+      end
+
       @width = records[0].length
       0.upto(@records.length - 1) do |i|
         if @records[i].length != @width
