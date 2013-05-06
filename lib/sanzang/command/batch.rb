@@ -68,6 +68,8 @@ module Sanzang::Command
       return 0
     rescue SystemExit => err
       return err.status
+    rescue Errno::EPIPE => err
+      return 0
     rescue Exception => err
       $stderr.puts err.backtrace
       $stderr.puts "\nERROR: #{err.inspect}\n\n"
