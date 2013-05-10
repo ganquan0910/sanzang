@@ -85,10 +85,25 @@ module Sanzang
     end
 
     # Read a text from _input_ and write its translation listing to _output_.
-    # The parameters _input_ and _output_ should be opened IO objects.
+    # If a parameter is a string, it is interpreted as the path to a file, and
+    # the relevant file is opened and used. Otherwise, the parameter is treated
+    # as an open IO object.
     #
     def translate_io(input, output)
-      output.write(gen_listing(input.read))
+      if input.kind_of?(String)
+        io_in = File.open(input, "rb", encoding: @table.encoding)
+      else
+        io_in = input
+      end
+      if output.kind_of?(String)
+        io_out = File.open(output, "wb", encoding: @table.encoding)
+      else
+        io_out = output
+      end
+      io_out.write(gen_listing(io_in.read))
+    ensure
+      io_in.close if input.kind_of?(String) and not io_in.closed?
+      io_out.close if output.kind_of?(String) and not io_out.closed?
     end
 
     # The TranslationTable used by the Translator
