@@ -4,7 +4,7 @@
 
 \Sanzang is a compact and simple cross-platform machine translation system.
 This program is especially useful for translating from CJK languages (Chinese,
-Korean, and Japanese), and it is very suitable for ancient and otherwise
+Japanese, and Korean), and it is very suitable for ancient and otherwise
 difficult texts. Due to its origins in translating texts from the Chinese
 Buddhist canon, the program is called \Sanzang (三藏), a literal translation of
 the Sanskrit word "Tripitaka," which is a general term for the Buddhist canon.
@@ -16,18 +16,20 @@ As demonstrated by the _sanzang_ program itself:
     [1.3]  tripiṭaka
 
 Anyone can learn how to use \Sanzang, and use it to read and analyze texts.
-Unlike most other systems, \Sanzang is small and approachable. Any user can
-develop his or her own translation rules, and these are simply stored in a text
-file that the program can read. For full details, refer to the MANUAL.
+Unlike most other systems, \Sanzang is small and approachable. Users can
+develop their own translation rules, and these rules are simply stored in a
+text file and applied at runtime.
 
 \Sanzang is free software ("free as in freedom"), and it is released under the
 GNU General Public License, version 3.
 
+For full details on how to install and use \Sanzang, please see the MANUAL.
+
 == Quick Install
 
 To install \Sanzang, the prerequisite is Ruby 1.9 or later. After Ruby has been
-installed, you can run the _gem_ command from a command shell to automatically
-download and install \Sanzang onto your computer.
+installed, you can then run the _gem_ command from a command shell to
+automatically download and install \Sanzang onto your computer.
 
     # gem install sanzang
 
@@ -47,4 +49,4 @@ This command should show a summary of your platform for running \Sanzang.
     Processors found: 4
     Sanzang version: 1.0.0
 
-You now have \Sanzang installed and running on your computer.
+You now have \Sanzang installed on your computer.
