@@ -20,6 +20,6 @@ module Sanzang
 
   # Current version number of Sanzang
   #
-  VERSION = "1.0.0"
+  VERSION = "1.0.1"
 
 end
