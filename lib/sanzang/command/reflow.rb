@@ -39,6 +39,7 @@ module Sanzang::Command
       @encoding = Encoding.default_external
       @infile = nil
       @outfile = nil
+      @verbose = false
     end
 
     def valid_encodings
@@ -88,11 +89,13 @@ module Sanzang::Command
       return 0
     rescue SystemExit => err
       return err.status
-    rescue Errno::EPIPE => err
+    rescue Errno::EPIPE
       return 0
     rescue Exception => err
-      $stderr.puts err.backtrace
-      $stderr.puts "\nERROR: #{err.inspect}\n\n"
+      if @verbose
+        $stderr.puts err.backtrace
+      end
+      $stderr.puts err.inspect
       return 1
     end
 
@@ -139,6 +142,9 @@ module Sanzang::Command
         end
         op.on("-o", "--outfile=FILE", "write output text to FILE") do |v|
           @outfile = v
+        end
+        op.on("-v", "--verbose", "verbose mode for debugging") do |v|
+          @verbose = true
         end
       end
     end
