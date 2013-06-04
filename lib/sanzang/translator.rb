@@ -48,9 +48,9 @@ module Sanzang
     end
 
     # Use the TranslationTable of the Translator to create translations for
-    # each destination language column of the translation table. These
-    # result is a simple Array of String objects, with each String object
-    # corresponding to a destination language column in the TranslationTable.
+    # each destination language column of the translation table. The result is
+    # a simple Array of String objects, with each String object corresponding
+    # to a destination language column in the TranslationTable.
     #
     def translate(source_text)
       text_collection = [source_text]
@@ -70,10 +70,13 @@ module Sanzang
     # This is the normal text listing output of the Sanzang Translator.
     #
     def gen_listing(source_text)
+      source_encoding = source_text.encoding
+      source_text.encode!(Encoding::UTF_8)
+
       newline = source_text.include?("\r") ? "\r\n" : "\n"
       texts = translate(source_text).collect {|t| t = t.split(newline) }
-      listing = "".encode(source_text.encoding)
 
+      listing = ""
       texts[0].length.times do |line_i|
         @table.width.times do |col_i|
           listing << "[#{line_i + 1}.#{col_i + 1}] #{texts[col_i][line_i]}" \
@@ -81,7 +84,7 @@ module Sanzang
         end
         listing << newline
       end
-      listing
+      listing.encode!(source_encoding)
     end
 
     # Read a text from _input_ and write its translation listing to _output_.

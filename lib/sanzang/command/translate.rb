@@ -40,6 +40,21 @@ module Sanzang::Command
       @verbose = false
     end
 
+    # Get a list of all acceptable text encodings.
+    #
+    def valid_encodings
+      all_enc = Encoding.list.collect {|e| e.to_s }.sort do |x,y|
+        x.upcase <=> y.upcase
+      end
+      all_enc.find_all do |e|
+        begin
+          Encoding::Converter.search_convpath(e, Encoding::UTF_8)
+        rescue Encoding::ConverterNotFoundError
+          e == "UTF-8" ? true : false
+        end
+      end
+    end
+
     # Run the translate command with the given arguments. The parameter _args_
     # would typically be an array of command options and parameters. Calling
     # this with the "-h" or "--help" option will print full usage information
@@ -127,10 +142,7 @@ module Sanzang::Command
           @encoding = Encoding.find(v)
         end
         op.on("-L", "--list-encodings", "list possible encodings") do |v|
-          encodings = Encoding.list.sort do |x,y|
-            x.to_s.upcase <=> y.to_s.upcase
-          end
-          puts encodings
+          puts valid_encodings
           exit 0
         end
         op.on("-i", "--infile=FILE", "read input text from FILE") do |v|

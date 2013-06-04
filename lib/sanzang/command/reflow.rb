@@ -32,7 +32,7 @@ module Sanzang::Command
   #
   class Reflow
 
-    # Create a new instance of the reflow command
+    # Create a new instance of the reflow command.
     #
     def initialize
       @name = "sanzang reflow"
@@ -42,6 +42,8 @@ module Sanzang::Command
       @verbose = false
     end
 
+    # Get a list of all acceptable text encodings.
+    #
     def valid_encodings
       all_enc = Encoding.list.collect {|e| e.to_s }.sort do |x,y|
         x.upcase <=> y.upcase

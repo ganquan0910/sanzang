@@ -42,11 +42,12 @@ module Sanzang
     #
     def initialize(rules)
       contents = rules.kind_of?(String) ? rules : rules.read
+      contents.encode!(Encoding::UTF_8)
       @encoding = contents.encoding
 
-      left = "~|".encode(@encoding)
-      right = "|~".encode(@encoding)
-      separator = "|".encode(@encoding)
+      left = "~|"
+      right = "|~"
+      separator = "|"
 
       @records = contents.gsub("\r", "").split("\n").collect do |rec|
         rec.strip.gsub(left, "").gsub(right, "").split(separator)
