@@ -31,6 +31,5 @@ environment for running \Sanzang on a computer with Windows.
 
 Converters for several encodings have not yet been implemented by YARV. Most of
 these are obscure and not widely used. Perhaps the most notable is EUC-TW,
-which is an old Unix encoding for traditional Chinese. Encoding conversion is
-used by the _reflow_ command for formatting CJK text, but encoding conversion
-is not required for translation.
+which is an old Unix encoding for traditional Chinese. Text encodings that
+cannot be converted to and from UTF-8 are not currently supported.
