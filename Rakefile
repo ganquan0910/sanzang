@@ -28,8 +28,8 @@ task :tar_gz => [:clean_tests, :clean_rdoc] do
   old_wd = Dir.pwd
   tar_fpath = File.join(Dir.pwd, "dist", "sanzang-#{Sanzang::VERSION}.tar")
   Dir.chdir ".."
-  Rake.sh "rm -rvf html"
-  Rake.sh "rm -vf #{tar_fpath}.gz"
+  Rake.sh "rm -rf html"
+  Rake.sh "rm -f #{tar_fpath}.gz"
   tar_opts = "--exclude='.git*' --exclude=dist --exclude=html"
   Rake.sh "tar #{tar_opts} -cvf #{tar_fpath} sanzang"
   Rake.sh "gzip -9 #{tar_fpath}"
@@ -43,7 +43,7 @@ task :tar_bz2 => [:clean_tests, :clean_rdoc] do
   old_wd = Dir.pwd
   tar_fpath = File.join(Dir.pwd, "dist", "sanzang-#{Sanzang::VERSION}.tar")
   Dir.chdir ".."
-  Rake.sh "rm -rvf html"
+  Rake.sh "rm -rf html"
   Rake.sh "rm -f #{tar_fpath}.bz2"
   tar_opts = "--exclude='.git*' --exclude=dist --exclude=html"
   Rake.sh "tar #{tar_opts} -cvf #{tar_fpath} sanzang"
@@ -62,7 +62,7 @@ end
 
 desc "Clean RDoc documentation"
 task :clean_rdoc do
-  Rake.sh "rm -rvf html"
+  Rake.sh "rm -rf html"
 end
 
 desc "Clean old test data"
