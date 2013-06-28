@@ -70,8 +70,8 @@ class TestSanzang < Test::Unit::TestCase
     table_path = File.join(File.dirname(__FILE__), "utf-8", "table.txt")
     s2_path = File.join(File.dirname(__FILE__), "utf-8", "stage_2.txt")
     s3_path = File.join(File.dirname(__FILE__), "utf-8", "stage_3.txt")
-    table = Sanzang::TranslationTable.new(IO.read(table_path))
-    translator = Sanzang::Translator.new(table)
+    tab = Sanzang::TranslationTable.new(IO.read(table_path, encoding: "UTF-8"))
+    translator = Sanzang::Translator.new(tab)
     translator.translate_io(s2_path, s3_path)
   end
 
