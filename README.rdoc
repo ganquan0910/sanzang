@@ -23,7 +23,7 @@ text file and applied at runtime.
 \Sanzang is free software ("free as in freedom"), and it is released under the
 GNU General Public License, version 3.
 
-For full details on how to install and use \Sanzang, please see the MANUAL.
+For full details on how to install and use \Sanzang, please see: MANUAL.rdoc
 
 == Quick Install
 

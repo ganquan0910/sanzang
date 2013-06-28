@@ -30,5 +30,10 @@ Gem::Specification.new do |s|
   s.require_path = "lib"
   s.test_files   = Dir.glob("test/tc_*.rb")
 
-  s.extra_rdoc_files = ["HACKING", "LICENSE", "MANUAL", "README"]
+  s.extra_rdoc_files = [
+    "HACKING.rdoc",
+    "LICENSE.rdoc",
+    "MANUAL.rdoc",
+    "README.rdoc"
+  ]
 end

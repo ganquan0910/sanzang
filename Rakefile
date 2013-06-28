@@ -82,8 +82,8 @@ desc "Build RDoc documentation"
 RDoc::Task.new do |rd|
   rd.title = "Sanzang"
   rd.rdoc_files.include "lib/**/*"
-  rd.rdoc_files.include "HACKING"
-  rd.rdoc_files.include "LICENSE"
-  rd.rdoc_files.include "MANUAL"
-  rd.rdoc_files.include "README"
+  rd.rdoc_files.include "HACKING.rdoc"
+  rd.rdoc_files.include "LICENSE.rdoc"
+  rd.rdoc_files.include "MANUAL.rdoc"
+  rd.rdoc_files.include "README.rdoc"
 end
