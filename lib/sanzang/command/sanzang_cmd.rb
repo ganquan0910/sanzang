@@ -70,7 +70,7 @@ module Sanzang::Command
     rescue Errno::EPIPE 
       return 0
     rescue Exception => err
-      $stderr.puts err.inspect
+      $stderr.puts "#{@name}: #{err.inspect}"
       return 1
     end
 

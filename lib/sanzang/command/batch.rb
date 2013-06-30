@@ -75,7 +75,7 @@ module Sanzang::Command
       if @verbose
         $stderr.puts err.backtrace
       end
-      $stderr.puts err.inspect
+      $stderr.puts "#{@name.split[0]}: #{err.inspect}"
       return 1
     end
 
@@ -85,8 +85,8 @@ module Sanzang::Command
     #
     def set_data_encoding
       if @encoding == nil
-        if Encoding.default_external == Encoding::IBM437
-          $stderr.puts "Switching to UTF-8 for text data encoding."
+        if Encoding.default_external.to_s =~ /ASCII|IBM/
+          $stderr.puts "Encoding: UTF-8"
           @encoding = Encoding::UTF_8
         else
           @encoding = Encoding.default_external
