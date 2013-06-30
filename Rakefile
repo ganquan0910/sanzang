@@ -1,9 +1,12 @@
+# -*- encoding: UTF-8 -*-
 #
 # Note: Building tar/gz and tar/bz2 files has been tested only with GNU tar.
 #
 
 require "rdoc/task"
-require "./lib/sanzang/version"
+require_relative File.join("lib", "sanzang", "version")
+
+Encoding.default_external = Encoding::UTF_8
 
 task :all => [:test, :clean, :gem, :tar]
 task :build => [:test, :gem]
@@ -18,38 +21,35 @@ task :gem => :clean_tests do
   Rake.sh "gem build sanzang.gemspec"
   Dir.glob("sanzang*.gem").each do |gem|
     FileUtils.mv(gem, File.join("dist", gem))
-    puts "\n=> #{File.join("dist", gem)}\n\n"
   end
 end
 
 desc "Build tar/gz"
 task :tar_gz => [:clean_tests, :clean_rdoc] do
-  FileUtils.mkdir_p("dist")
   old_wd = Dir.pwd
+  FileUtils.mkdir_p("dist")
   tar_fpath = File.join(Dir.pwd, "dist", "sanzang-#{Sanzang::VERSION}.tar")
-  Dir.chdir ".."
-  Rake.sh "rm -rf html"
+  Rake.sh "rm -f tar_fpath"
   Rake.sh "rm -f #{tar_fpath}.gz"
+  Dir.chdir("..")
   tar_opts = "--exclude='.git*' --exclude=dist --exclude=html"
-  Rake.sh "tar #{tar_opts} -cvf #{tar_fpath} sanzang"
+  Rake.sh "tar #{tar_opts} -cf #{tar_fpath} sanzang"
   Rake.sh "gzip -9 #{tar_fpath}"
   Dir.chdir(old_wd)
-  puts "\n=> #{tar_fpath}.gz\n\n"
 end
 
 desc "Build tar/bz2"
 task :tar_bz2 => [:clean_tests, :clean_rdoc] do
+  old_wd = Dir.pwd 
   FileUtils.mkdir_p("dist")
-  old_wd = Dir.pwd
   tar_fpath = File.join(Dir.pwd, "dist", "sanzang-#{Sanzang::VERSION}.tar")
-  Dir.chdir ".."
-  Rake.sh "rm -rf html"
+  Rake.sh "rm -f tar_fpath"
   Rake.sh "rm -f #{tar_fpath}.bz2"
+  Dir.chdir("..")
   tar_opts = "--exclude='.git*' --exclude=dist --exclude=html"
-  Rake.sh "tar #{tar_opts} -cvf #{tar_fpath} sanzang"
+  Rake.sh "tar #{tar_opts} -cf #{tar_fpath} sanzang"
   Rake.sh "bzip2 -9 #{tar_fpath}"
   Dir.chdir(old_wd)
-  puts "\n=> #{tar_fpath}.bz2\n\n"
 end
 
 desc "Clean old build files"
@@ -62,6 +62,7 @@ end
 
 desc "Clean RDoc documentation"
 task :clean_rdoc do
+  Rake.sh "rm -rf doc"
   Rake.sh "rm -rf html"
 end
 
