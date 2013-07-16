@@ -128,10 +128,9 @@ module Sanzang::Command
 
         op.banner << "\nTranslate text using simple table rules. Input text "
         op.banner << "is read from STDIN by\ndefault, and the output is "
-        op.banner << "written to STDOUT by default.\n"
+        op.banner << "written to STDOUT by default. The translation table "
+        op.banner << "\nfile is specified as a parameter.\n"
 
-        op.banner << "\nExample:\n"
-        op.banner << "    #{@name} -i text.txt -o text.sz.txt table.txt\n"
         op.banner << "\nOptions:\n"
 
         op.on("-h", "--help", "show this help message and exit") do |v|

@@ -122,10 +122,12 @@ module Sanzang::Command
       OptionParser.new do |op|
         op.banner = "Usage: #{@name} [options]\n"
 
-        op.banner << "\nReformat text file contents into lines based on "
-        op.banner << "spacing, punctuation, etc.\n"
-        op.banner << "\nExamples:\n"
-        op.banner << "    #{@name} -i in/mytext.txt -o out/mytext.txt\n"
+        op.banner << "\nReformat text into lines based on spacing, "
+        op.banner << "punctuation, etc. This should work\nfor the CJK "
+        op.banner << "languages (Chinese, Japanese, and Korean). By default, "
+        op.banner << "text is read\nfrom STDIN and written to STDOUT."
+        op.banner << "\n"
+
         op.banner << "\nOptions:\n"
 
         op.on("-h", "--help", "show this help message and exit") do |v|

@@ -100,16 +100,17 @@ module Sanzang::Command
     def option_parser
       OptionParser.new do |op|
         op.banner = "Usage: #{@name} [options]\n"
-        op.banner << "Usage: #{@name} <command> [options] [args]\n\n"
+        op.banner << "Usage: #{@name} <command> [options] [args]\n"
 
-        op.banner << "Use \"--help\" with commands for usage information.\n"
+        op.banner << "\nUse \"-h\" or \"--help\" with sanzang commands for "
+        op.banner << "usage information.\n"
 
         op.banner << "\nSanzang commands:\n"
-        op.banner << "    batch       translate many files in parallel\n"
+        op.banner << "    batch       translate many files in parallel\n"    
         op.banner << "    reflow      format CJK text for translation\n"
         op.banner << "    translate   standard single text translation\n"
-        op.banner << "\nOptions:\n"
 
+        op.banner << "\nOptions:\n"
         op.on("-h", "--help", "show this help message and exit") do |v|
           puts op
           exit 0
