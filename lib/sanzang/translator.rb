@@ -69,7 +69,7 @@ module Sanzang
     # Translator#translate is collated and numbered for reference purposes.
     # This is the normal text listing output of the Sanzang Translator.
     #
-    def gen_listing(source_text)
+    def gen_listing(source_text, pos = 1)
       source_encoding = source_text.encoding
       source_text.encode!(Encoding::UTF_8)
 
@@ -79,7 +79,7 @@ module Sanzang
       listing = ""
       texts[0].length.times do |line_i|
         @table.width.times do |col_i|
-          listing << "[#{line_i + 1}.#{col_i + 1}] #{texts[col_i][line_i]}" \
+          listing << "[#{pos + line_i}.#{col_i + 1}] #{texts[col_i][line_i]}" \
                   << newline
         end
         listing << newline
@@ -90,7 +90,8 @@ module Sanzang
     # Read a text from _input_ and write its translation listing to _output_.
     # If a parameter is a string, it is interpreted as the path to a file, and
     # the relevant file is opened and used. Otherwise, the parameter is treated
-    # as an open IO object.
+    # as an open IO object. I/O is buffered for better performance and to avoid
+    # reading entire texts into memory.
     #
     def translate_io(input, output)
       if input.kind_of?(String)
@@ -103,7 +104,18 @@ module Sanzang
       else
         io_out = output
       end
-      io_out.write(gen_listing(io_in.read))
+
+      buf_size = 96
+      buffer = ""
+      io_in.each do |line|
+        buffer << line
+        if io_in.lineno % buf_size == 0
+          io_out.write(gen_listing(buffer, io_in.lineno - buf_size + 1))
+          buffer = ""
+        end
+      end
+      io_out.write(
+        gen_listing(buffer, io_in.lineno - buffer.rstrip.count("\n")))
     ensure
       io_in.close if input.kind_of?(String) and not io_in.closed?
       io_out.close if output.kind_of?(String) and not io_out.closed?
