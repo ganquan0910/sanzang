@@ -293,14 +293,9 @@ messages will still be displayed in the console's native IBM-437 encoding.
 
     $ sanzang t -E UTF-16LE -i in.txt -o out.txt TABLE.txt
 
-If the "-E" option is not specified, then \Sanzang will use the default
-encoding inherited from the environment. For example, a GNU/Linux user running
-\Sanzang in a UTF-8 terminal will by default have all text data read and
-written to in the UTF-8 encoding. The one *exception* to this is for
-environments using the IBM-437 encoding (typically an old Windows command
-shell). In this case, \Sanzang will take pity on you and automatically switch
-to UTF-8 by default, as if you had specified the option "-E" with value
-"UTF-8".
+If the "-E" option is not specified, then \Sanzang will use the default data
+encoding for that environment. The data encoding can be seen by running
+\sanzang with the "--version" or "--platform" options.
 
 == Responsible Use
 

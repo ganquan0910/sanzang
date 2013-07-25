@@ -34,19 +34,12 @@ automatically download and install \Sanzang onto your computer.
     # gem install sanzang
 
 After this, you should be able to run the _sanzang_ command. Run the following
-command to verify your installation and print platform information.
+command to verify your installation and print version information.
 
-    # sanzang -P
+    # sanzang -V
 
-This command should show a summary of your platform for running \Sanzang.
+This command should show a summary of your \Sanzang version and environment.
 
-    Ruby platform: x86_64-linux
-    Ruby version: 2.0.0
-    External encoding: UTF-8
-    Internal encoding: none
-    Fork implemented: true
-    Parallel version: 0.6.4
-    Processors found: 4
-    Sanzang version: 1.0.0
+    sanzang 1.0.4 [ruby_1.9.3] [x86_64-linux] [UTF-8]
 
 You now have \Sanzang installed on your computer.
