@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # -*- encoding: UTF-8 -*-
 #--
-# Copyright (C) 2012 Lapis Lazuli Texts
+# Copyright (C) 2012-2013 Lapis Lazuli Texts
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
