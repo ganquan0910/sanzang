@@ -18,6 +18,7 @@
 
 require "optparse"
 
+require_relative File.join("..", "platform")
 require_relative File.join("..", "translation_table")
 require_relative File.join("..", "batch_translator")
 require_relative File.join("..", "version")
@@ -35,7 +36,7 @@ module Sanzang::Command
     #
     def initialize
       @name = "sanzang batch"
-      @encoding = nil
+      @encoding = Sanzang::Platform.data_encoding
       @outdir = nil
       @jobs = nil
       @verbose = false
@@ -55,8 +56,6 @@ module Sanzang::Command
         $stderr.puts parser
         return 1
       end
-
-      set_data_encoding
 
       translator = nil
       File.open(args[0], "rb", encoding: @encoding) do |table_file|
@@ -79,20 +78,11 @@ module Sanzang::Command
       return 1
     end
 
-    private
+    # Name of the command
+    #              
+    attr_reader :name
 
-    # Set the encoding for text data if it is not already set
-    #
-    def set_data_encoding
-      if @encoding == nil
-        if Encoding.default_external.to_s =~ /ASCII|IBM/
-          $stderr.puts "Encoding: UTF-8"
-          @encoding = Encoding::UTF_8
-        else
-          @encoding = Encoding.default_external
-        end
-      end
-    end
+    private
 
     # Return an OptionParser object for this command
     #
@@ -116,10 +106,7 @@ module Sanzang::Command
           @encoding = Encoding.find(v)
         end
         op.on("-L", "--list-encodings", "list possible encodings") do |v|
-          encodings = Encoding.list.sort do |x,y|
-            x.to_s.upcase <=> y.to_s.upcase
-          end
-          puts encodings
+          Sanzang::Platform.valid_encodings.each {|e| puts e.to_s }
           exit 0
         end
         op.on("-j", "--jobs=N", "allow N concurrent processes") do |v|
@@ -130,10 +117,6 @@ module Sanzang::Command
         end
       end
     end
-
-    # Name of the command
-    #
-    attr_reader :name
 
   end
 end

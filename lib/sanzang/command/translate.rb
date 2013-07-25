@@ -18,6 +18,7 @@
 
 require "optparse"
 
+require_relative File.join("..", "platform")
 require_relative File.join("..", "translation_table")
 require_relative File.join("..", "translator")
 require_relative File.join("..", "version")
@@ -34,25 +35,10 @@ module Sanzang::Command
     #
     def initialize
       @name = "sanzang translate"
-      @encoding = nil
+      @encoding = Sanzang::Platform.data_encoding
       @infile = nil
       @outfile = nil
       @verbose = false
-    end
-
-    # Get a list of all acceptable text encodings.
-    #
-    def valid_encodings
-      all_enc = Encoding.list.collect {|e| e.to_s }.sort do |x,y|
-        x.upcase <=> y.upcase
-      end
-      all_enc.find_all do |e|
-        begin
-          Encoding::Converter.search_convpath(e, Encoding::UTF_8)
-        rescue Encoding::ConverterNotFoundError
-          e == "UTF-8" ? true : false
-        end
-      end
     end
 
     # Run the translate command with the given arguments. The parameter _args_
@@ -68,8 +54,6 @@ module Sanzang::Command
         $stderr.puts parser
         return 1
       end
-
-      set_data_encoding
 
       translator = nil
       File.open(args[0], "rb", encoding: @encoding) do |table_file|
@@ -105,20 +89,11 @@ module Sanzang::Command
       return 1
     end
 
-    private
+    # Name of the command
+    #               
+    attr_reader :name 
 
-    # Initialize the encoding for text data if it is not already set
-    #
-    def set_data_encoding
-      if @encoding == nil
-        if Encoding.default_external.to_s =~ /ASCII|IBM/
-          $stderr.puts "Encoding: UTF-8"
-          @encoding = Encoding::UTF_8
-        else
-          @encoding = Encoding.default_external
-        end
-      end
-    end
+    private
 
     # An OptionParser for the command
     #
@@ -141,7 +116,7 @@ module Sanzang::Command
           @encoding = Encoding.find(v)
         end
         op.on("-L", "--list-encodings", "list possible encodings") do |v|
-          puts valid_encodings
+          Sanzang::Platform.valid_encodings.each {|e| puts e.to_s }
           exit 0
         end
         op.on("-i", "--infile=FILE", "read input text from FILE") do |v|
@@ -155,10 +130,6 @@ module Sanzang::Command
         end
       end
     end
-
-    # Name of the command
-    #
-    attr_reader :name
 
   end
 end

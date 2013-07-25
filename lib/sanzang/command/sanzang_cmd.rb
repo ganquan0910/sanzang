@@ -23,6 +23,7 @@ require_relative "reflow"
 require_relative "translate"
 require_relative "batch"
 
+require_relative File.join("..", "platform")
 require_relative File.join("..", "version")
 
 module Sanzang::Command
@@ -77,21 +78,29 @@ module Sanzang::Command
     # A string giving a listing of platform information
     #
     def platform_info
-      info = "Ruby platform: #{RUBY_PLATFORM}\n"
-      info << "Ruby version: #{RUBY_VERSION}\n"
-      info << "External encoding: #{Encoding.default_external}\n"
-      info << "Internal encoding: #{Encoding.default_internal or 'none'}\n"
-      info << "Fork implemented: #{Process.respond_to?(:fork)}\n"
-      info << "Parallel version: #{Parallel::VERSION}\n"
-      info << "Processors found: #{Parallel.processor_count}\n"
-      info << "Sanzang version: #{Sanzang::VERSION}\n"
+      info = "host_arch = #{Sanzang::Platform.machine_arch}\n"
+      info << "host_os = #{Sanzang::Platform.os_name}\n"
+      info << "host_processors = #{Sanzang::Platform.processor_count}\n"
+      info << "ruby_encoding_ext = #{Encoding.default_external}\n"
+      info << "ruby_encoding_int = #{Encoding.default_internal or 'none'}\n"
+      info << "ruby_multiproc = #{Sanzang::Platform.unix_processes?}\n"
+      info << "ruby_platform = #{RUBY_PLATFORM}\n"
+      info << "ruby_version = #{RUBY_VERSION}\n"
+      info << "sanzang_encoding = #{Sanzang::Platform.data_encoding}\n"
+      info << "sanzang_parallel = #{Parallel::VERSION}\n"
+      info << "sanzang_version = #{Sanzang::VERSION}\n"
     end
 
     # This is a string giving a brief one-line summary of version information
     #
     def version_info
-      "sanzang #{Sanzang::VERSION} [ruby_#{RUBY_VERSION}] [#{RUBY_PLATFORM}]"
+      "sanzang #{Sanzang::VERSION} [ruby_#{RUBY_VERSION}] [#{RUBY_PLATFORM}]" \
+        + " [#{Sanzang::Platform.data_encoding}]"
     end
+
+    # Name of the command
+    #
+    attr_reader :name
 
     private
 
@@ -125,10 +134,6 @@ module Sanzang::Command
         end
       end
     end
-
-    # Name of the command
-    #
-    attr_reader :name
 
   end
 end

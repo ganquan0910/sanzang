@@ -18,6 +18,7 @@
 
 require "parallel"
 
+require_relative "platform"
 require_relative "translator"
 
 module Sanzang
@@ -28,18 +29,6 @@ module Sanzang
   #
   class BatchTranslator < Translator
 
-    # Evaluates to true if this Ruby can execute the fork(2) system call.
-    #
-    def forking?
-      Process.respond_to?(:fork)
-    end
-
-    # The number of logical processors detected on the current system.
-    #
-    def processor_count
-      Parallel.processor_count
-    end
-
     # Translate a batch of files. The main parameter is an array, each element
     # of which should be a two-dimensional array with the first element being
     # the input file path, and the second element being the output file path.
@@ -47,8 +36,10 @@ module Sanzang
     # return value is an array containing all the output file paths.
     #
     def translate_batch(fpath_pairs, verbose = true, jobs = nil)
-      if not forking?
+      if not Sanzang::Platform.unix_processes?
         jobs = 0
+      elsif not jobs
+        jobs = Sanzang::Platform.processor_count
       end
       Parallel.map(fpath_pairs, :in_processes => jobs) do |f1,f2|
         translate_io(f1, f2)

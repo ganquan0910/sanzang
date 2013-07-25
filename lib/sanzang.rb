@@ -23,10 +23,11 @@
 module Sanzang
 end
 
+require_relative File.join("sanzang", "batch_translator")
+require_relative File.join("sanzang", "platform")
 require_relative File.join("sanzang", "text_formatter")
 require_relative File.join("sanzang", "translation_table")
 require_relative File.join("sanzang", "translator")
-require_relative File.join("sanzang", "batch_translator")
 require_relative File.join("sanzang", "version")
 
 # The Sanzang::Command module contains Unix style commands utilizing the

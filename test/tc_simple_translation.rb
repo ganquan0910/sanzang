@@ -60,26 +60,24 @@ class TestSanzang < Test::Unit::TestCase
     assert_equal(stage_2(), text)
   end
 
-  def test_translate_string
-    table = Sanzang::TranslationTable.new(table_string())
-    text = Sanzang::Translator.new(table).gen_listing(stage_2())
-    assert_equal(stage_3(), text)
-  end
-
   def test_translate_file
     table_path = File.join(File.dirname(__FILE__), "utf-8", "table.txt")
     s2_path = File.join(File.dirname(__FILE__), "utf-8", "stage_2.txt")
     s3_path = File.join(File.dirname(__FILE__), "utf-8", "stage_3.txt")
     tab = Sanzang::TranslationTable.new(IO.read(table_path, encoding: "UTF-8"))
     translator = Sanzang::Translator.new(tab)
-    translator.translate_io(s2_path, s3_path)
+    translator.translate_io(s2_path, s3_path) 
+  end
+
+  def test_translate_string
+    table = Sanzang::TranslationTable.new(table_string())
+    text = Sanzang::Translator.new(table).gen_listing(stage_2())
+    assert_equal(stage_3(), text)
   end
 
   def test_translator_parallel
-    table = Sanzang::TranslationTable.new(table_string())
-    bt = Sanzang::BatchTranslator.new(table)
-    bt.forking?
-    assert(bt.processor_count > 0, "Processor count less than zero")
+    procs = Sanzang::Platform.processor_count
+    assert(procs > 0, "Processor count less than zero")
   end
 
   def test_translate_batch
