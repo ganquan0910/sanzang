@@ -29,7 +29,7 @@ module Sanzang
     # summarized as follows:
     #
     # - Each line of text is a record for a translation rule.
-    # - Each record begins with "~|" and ends with "|~".
+    # - Each record may begin with "~|" and end with "|~".
     # - Fields in the record are separated by the "|" character.
     # - The first field contains the term in the source language.
     # - Subsequent fields are equivalent terms in destination languages.
@@ -43,15 +43,11 @@ module Sanzang
     def initialize(rules)
       contents = rules.kind_of?(String) ? rules : rules.read
       contents.encode!(Encoding::UTF_8)
-      @encoding = contents.encoding
-
-      left = "~|"
-      right = "|~"
-      separator = "|"
-
-      @records = contents.gsub("\r", "").split("\n").collect do |rec|
-        rec.strip.gsub(left, "").gsub(right, "").split(separator)
-      end
+      contents.strip!
+      contents.gsub!(/^\s*|\s*$|\r/, "")
+      contents.gsub!("~|", "")
+      contents.gsub!("|~", "")
+      @records = contents.split("\n").collect {|r| r.split("|") }
 
       if @records.length < 1
         raise "Table must have at least 1 row"
@@ -59,9 +55,9 @@ module Sanzang
         raise "Table must have at least 2 columns"
       end
 
-      @width = records[0].length
-      0.upto(@records.length - 1) do |i|
-        if @records[i].length != @width
+      width = records[0].length
+      @records.each do |r|
+        if r.length != width
           raise "Column mismatch: Line #{i + 1}"
         end
       end
@@ -73,6 +69,12 @@ module Sanzang
     #
     def [](index)
       @records[index]
+    end
+
+    # The text encoding used for all translation table data
+    #
+    def encoding
+      Encoding::UTF_8
     end
 
     # Find a record by the source language term (first column).
@@ -96,10 +98,6 @@ module Sanzang
     # The records for the translation table, as an array
     #
     attr_reader :records
-
-    # The text encoding used for all translation table data
-    #
-    attr_reader :encoding
 
   end
 end
