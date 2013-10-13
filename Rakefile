@@ -1,4 +1,4 @@
-# -*- encoding: UTF-8 -*-
+# coding: UTF-8
 #
 # Note: Building tar/gz and tar/bz2 files has been tested only with GNU tar.
 #
@@ -8,7 +8,7 @@ require_relative File.join("lib", "sanzang", "version")
 
 Encoding.default_external = Encoding::UTF_8
 
-task :all => [:test, :clean, :gem, :tar]
+task :all => [:test, :clean, :gem]
 task :build => [:test, :gem]
 task :clean => [:clean_dist, :clean_tests, :clean_rdoc]
 task :default => [:test, :gem]
