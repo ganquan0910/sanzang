@@ -1,13 +1,14 @@
-# -*- encoding: UTF-8 -*-
+# coding: UTF-8
 
 require "./lib/sanzang/version"
 
 Gem::Specification.new do |s|
   s.required_ruby_version = ">= 1.9.0"
-  s.add_dependency("parallel", ">= 0.5.19")
+  s.requirements << "parallel ~> 0.8"
+  s.add_runtime_dependency("parallel", "~> 0.8")
 
   s.name         = "sanzang"
-  s.summary      = "Simple rule-based machine translation system."
+  s.summary      = "Machine translation for CJK languages"
   s.version      = Sanzang::VERSION
   s.license      = "GPL-3"
 
@@ -22,10 +23,10 @@ Gem::Specification.new do |s|
   s.description << "under the GNU GPL, version 3."
 
   s.authors      = ["Lapis Lazuli Texts"]
-  s.email        = ["lapislazulitexts@gmail.com"]
+  s.email        = "lapislazulitexts@gmail.com"
   s.homepage     = "http://www.lapislazulitexts.com/sanzang/"
 
-  s.executables  = Dir.glob("bin/**/*").map {|f| File.basename(f) }
+  s.executables  = ["sanzang"]
   s.files        = Dir.glob("{bin,test,lib}/**/**/*")
   s.require_path = "lib"
   s.test_files   = Dir.glob("test/tc_*.rb")
