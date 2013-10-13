@@ -1,5 +1,4 @@
-#!/usr/bin/env ruby
-# -*- encoding: UTF-8 -*-
+# coding: UTF-8
 #--
 # Copyright (C) 2012-2013 Lapis Lazuli Texts
 #
