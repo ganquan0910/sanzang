@@ -36,12 +36,15 @@ module Sanzang
     # return value is an array containing all the output file paths.
     #
     def translate_batch(fpath_pairs, verbose = true, jobs = nil)
-      if not Sanzang::Platform.unix_processes?
-        jobs = 0
-      elsif not jobs
-        jobs = Sanzang::Platform.processor_count
+      options = {}
+      if RUBY_PLATFORM =~ /java/
+        options[:in_threads] = jobs || Sanzang::Platform.processor_count
+      elsif Sanzang::Platform.unix_processes?
+        options[:in_processes] = jobs || Sanzang::Platform.processor_count
+      else
+        options[:in_processes] = 0
       end
-      Parallel.map(fpath_pairs, :in_processes => jobs) do |f1,f2|
+      Parallel.map(fpath_pairs, options) do |f1,f2|
         translate_io(f1, f2)
         if verbose
           $stderr.write "[#{Process.pid}] #{File.expand_path(f2)} \n"
