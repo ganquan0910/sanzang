@@ -3,8 +3,9 @@
 == Supported platforms
 
 These programs should work on all platforms with Ruby 1.9 or later. Regular
-testing takes place on GNU/Linux operating systems. \Sanzang has not been fully
-tested on other implementations of Ruby (e.g. JRuby, Rubinius, etc.).
+testing takes place on GNU/Linux operating systems. \Sanzang also runs on
+JRuby, although the runtime performance is usually slower than MRI. \Sanzang
+has not been tested on other Ruby implementations such as Rubinius.
 
 == Languages and scope
 
@@ -27,9 +28,12 @@ fork(2) perfectly, so Ruby 1.9+ on Cygwin can utilize the fork method, so
 it supports standard multiprocessing. Therefore, Cygwin is the most robust
 environment for running \Sanzang on a computer with Windows.
 
+For JRuby, \Sanzang does not use fork(2) and multiprocessing, but rather uses
+Java threads to achieve high performance for batch processing.
+
 == Text encoding quirks
 
-Converters for several encodings have not yet been implemented by YARV. Most of
+Converters for several encodings have not yet been implemented by MRI. Most of
 these are obscure and not widely used. Perhaps the most notable is EUC-TW,
 which is an old Unix encoding for traditional Chinese. Text encodings that
 cannot be converted to and from UTF-8 are not currently supported.
