@@ -63,10 +63,10 @@ module Sanzang::Command
         fout.binmode.set_encoding(@encoding)
         fout.write(Sanzang::TextFormatter.new.reflow_cjk(fin.read))
       ensure
-        if defined?(fin) and fin != $stdin
+        if defined?(fin) and fin.class == File
           fin.close if not fin.closed?
         end
-        if defined?(fout) and fin != $stdout
+        if defined?(fout) and fout.class == File
           fout.close if not fout.closed?
         end
       end

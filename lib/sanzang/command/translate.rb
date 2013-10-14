@@ -67,10 +67,10 @@ module Sanzang::Command
         fout.binmode.set_encoding(@encoding)
         translator.translate_io(fin, fout)
       ensure
-        if defined?(fin) and fin != $stdin
+        if defined?(fin) and fin.class == File
           fin.close if not fin.closed?
         end
-        if defined?(fout) and fin != $stdout
+        if defined?(fout) and fout.class == File
           fout.close if not fout.closed?
         end
       end
