@@ -70,8 +70,8 @@ module Sanzang::Platform
       if os_name =~ /mingw|mswin/
         require 'win32ole'
         result = WIN32OLE.connect("winmgmts://").ExecQuery(
-          "select NumberOfLogicalProcessors from Win32_Processor")
-        result.to_enum.first.NumberOfLogicalProcessors
+            "select NumberOfLogicalProcessors from Win32_Processor")
+        result.to_enum.collect(&:NumberOfLogicalProcessors).reduce(:+)
       elsif File.readable?("/proc/cpuinfo")
         IO.read("/proc/cpuinfo").scan(/^processor/).size
       elsif File.executable?("/usr/bin/hwprefs")
