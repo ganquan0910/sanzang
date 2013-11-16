@@ -116,8 +116,12 @@ module Sanzang
       io_out.write(
         gen_listing(buffer, io_in.lineno - buffer.rstrip.count("\n")))
     ensure
-      io_in.close if input.kind_of?(String) and not io_in.closed?
-      io_out.close if output.kind_of?(String) and not io_out.closed?
+      if input.kind_of?(String) and defined?(io_in) and io_in
+        io_in.close if not io_in.closed?
+      end
+      if output.kind_of?(String) and defined?(io_out) and io_out
+        io_out.close if not io_out.closed?
+      end
     end
 
     # The TranslationTable used by the Translator
