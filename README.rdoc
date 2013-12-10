@@ -10,7 +10,7 @@ Buddhist canon, the program is called \Sanzang (三藏), a literal translation o
 the Sanskrit word "Tripitaka," which is a general term for the Buddhist canon.
 As demonstrated by the _sanzang_ program itself:
 
-    $ echo '三藏' | sanzang t sztab
+    $ echo 三藏 | sanzang t sztab
     [1.1] 三藏
     [1.2]  sānzàng
     [1.3]  tripiṭaka
@@ -36,10 +36,10 @@ automatically download and install \Sanzang onto your computer.
 After this, you should be able to run the _sanzang_ command. Run the following
 command to verify your installation and print version information.
 
-    # sanzang -V
+    # sanzang --version
 
 This command should show a summary of your \Sanzang version and environment.
 
-    sanzang 1.0.4 [ruby_1.9.3] [x86_64-linux] [UTF-8]
+    sanzang 1.0.8 UTF-8 ruby-2.0.0p353 x86_64-linux
 
 You now have \Sanzang installed on your computer.
