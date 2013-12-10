@@ -116,7 +116,13 @@ module Sanzang::Platform
     # UTF-8 since these are effectively obsolete, or they are subsets of UTF-8.
     #
     def data_encoding
-      if Encoding.default_external.to_s =~ /ASCII|IBM/
+      if ENV["SANZANG_ENCODING"] and ENV["SANZANG_ENCODING"].strip != ""
+        encoding = Encoding.find(ENV["SANZANG_ENCODING"])
+        if encoding != Encoding::UTF_8
+          Encoding::Converter.search_convpath(encoding, Encoding::UTF_8)
+        end
+        encoding
+      elsif Encoding.default_external.to_s =~ /ASCII|IBM/
         Encoding::UTF_8
       else
         Encoding.default_external
