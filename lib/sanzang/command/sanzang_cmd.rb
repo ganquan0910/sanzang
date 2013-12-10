@@ -84,7 +84,7 @@ module Sanzang::Command
       info << "ruby_encoding_int = #{Encoding.default_internal or 'none'}\n"
       info << "ruby_multiproc = #{Sanzang::Platform.unix_processes?}\n"
       info << "ruby_platform = #{RUBY_PLATFORM}\n"
-      info << "ruby_version = #{RUBY_VERSION}\n"
+      info << "ruby_version = #{RUBY_VERSION}p#{RUBY_PATCHLEVEL}\n"
       info << "sanzang_encoding = #{Sanzang::Platform.data_encoding}\n"
       info << "sanzang_parallel = #{Parallel::VERSION}\n"
       info << "sanzang_version = #{Sanzang::VERSION}\n"
@@ -93,8 +93,8 @@ module Sanzang::Command
     # This is a string giving a brief one-line summary of version information
     #
     def version_info
-      "sanzang #{Sanzang::VERSION} [ruby_#{RUBY_VERSION}] [#{RUBY_PLATFORM}]" \
-        + " [#{Sanzang::Platform.data_encoding}]"
+      "sanzang #{Sanzang::VERSION} #{Sanzang::Platform.data_encoding}" \
+        + " ruby-#{RUBY_VERSION}p#{RUBY_PATCHLEVEL} #{RUBY_PLATFORM}"
     end
 
     # Name of the command
