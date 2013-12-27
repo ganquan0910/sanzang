@@ -104,8 +104,11 @@ module Sanzang::Platform
       Encoding.list.find_all do |e|
         begin
           Encoding::Converter.search_convpath(e, Encoding::UTF_8)
+          true
         rescue Encoding::ConverterNotFoundError
           e == Encoding::UTF_8 ? true : false
+        rescue TypeError
+          false
         end
       end.sort_by! {|e| e.to_s.upcase }
     end
