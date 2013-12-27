@@ -78,6 +78,9 @@ module Sanzang::Command
       return 0
     rescue SystemExit => err
       return err.status
+    rescue Interrupt
+      puts
+      return 0
     rescue Errno::EPIPE
       return 0
     rescue Exception => err
