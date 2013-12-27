@@ -67,7 +67,10 @@ module Sanzang::Command
       return 1
     rescue SystemExit => err
       return err.status
-    rescue Errno::EPIPE 
+    rescue Interrupt
+      puts
+      return 0
+    rescue Errno::EPIPE
       return 0
     rescue Exception => err
       $stderr.puts "#{@name}: #{err.inspect}"
@@ -93,7 +96,7 @@ module Sanzang::Command
     # This is a string giving a brief one-line summary of version information
     #
     def version_info
-      "sanzang #{Sanzang::VERSION} #{Sanzang::Platform.data_encoding}" \
+      "sanzang #{Sanzang::VERSION} (#{Sanzang::Platform.data_encoding})" \
         + " ruby-#{RUBY_VERSION}p#{RUBY_PATCHLEVEL} #{RUBY_PLATFORM}"
     end
 
