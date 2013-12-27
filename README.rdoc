@@ -40,6 +40,6 @@ command to verify your installation and print version information.
 
 This command should show a summary of your \Sanzang version and environment.
 
-    sanzang 1.0.8 UTF-8 ruby-2.0.0p353 x86_64-linux
+    sanzang 1.0.8 (UTF-8) ruby-2.1.0p0 x86_64-linux
 
 You now have \Sanzang installed on your computer.
