@@ -113,8 +113,10 @@ module Sanzang
           buffer = ""
         end
       end
-      io_out.write(
-        gen_listing(buffer, io_in.lineno - buffer.rstrip.count("\n")))
+
+      newline = "\n".encode!(buffer.encoding)
+      io_out.write(gen_listing(buffer,
+          io_in.lineno - buffer.rstrip.count(newline)))
     ensure
       if input.kind_of?(String) and defined?(io_in) and io_in
         io_in.close if not io_in.closed?
