@@ -130,6 +130,8 @@ module Sanzang::Platform
         encoding
       elsif Encoding.default_external.to_s =~ /ASCII|IBM/
         Encoding::UTF_8
+      elsif RUBY_PLATFORM == "java"
+        Encoding::UTF_8
       else
         Encoding.default_external
       end
