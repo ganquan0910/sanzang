@@ -101,13 +101,16 @@ module Sanzang::Platform
     # converter implementations for obscure encodings.
     #
     def valid_encodings
+      if RUBY_PLATFORM == "java"
+        return [Encoding::UTF_8]
+      end
       Encoding.list.find_all do |e|
         begin
           Encoding::Converter.search_convpath(e, Encoding::UTF_8)
           true
         rescue Encoding::ConverterNotFoundError
           e == Encoding::UTF_8 ? true : false
-        rescue TypeError
+        rescue
           false
         end
       end.sort_by! {|e| e.to_s.upcase }
