@@ -4,8 +4,9 @@
 
 These programs should work on all platforms with Ruby 1.9 or later. Regular
 testing takes place on GNU/Linux operating systems. \Sanzang also runs on
-JRuby, although the runtime performance is usually slower than MRI. \Sanzang
-has not been tested on other Ruby implementations such as Rubinius.
+JRuby, although the runtime performance is usually slower than MRI, and text
+encoding support is limited to UTF-8. \Sanzang has not been tested on other
+Ruby implementations such as Rubinius.
 
 == Languages and scope
 
